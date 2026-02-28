@@ -265,7 +265,7 @@ class Game {
     const status = this.playerStatus.get(oldSocketId) ||
       this.lastBroadcastStatus || {
         name: STATUS.WAIT,
-        data: { text: "Waiting for players" },
+        data: { text: "Waiting for game to start..." },
       }
 
     if (this.playerStatus.has(oldSocketId)) {

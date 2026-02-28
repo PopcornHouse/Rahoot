@@ -27,7 +27,7 @@ export const ANSWERS_ICONS = [Triangle, Rhombus, Circle, Square]
 export const GAME_STATES = {
   status: {
     name: STATUS.WAIT,
-    data: { text: "Waiting for the players" },
+    data: { text: "Waiting for game to start..." },
   },
   question: {
     current: 1,
