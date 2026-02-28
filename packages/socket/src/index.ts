@@ -31,7 +31,7 @@ import Registry from "@rahoot/socket/services/registry"
 import { withGame } from "@rahoot/socket/utils/game"
 import { Server as ServerIO } from "socket.io"
 
-const io: Server = new ServerIO({
+const io: ServerIO = new ServerIO({
   cors: {
     origin: [env.WEB_ORIGIN],
   },
