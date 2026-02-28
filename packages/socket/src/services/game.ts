@@ -1,3 +1,14 @@
+import {
+    GAME_COOLDOWN,
+    GAME_ERROR_MESSAGE,
+    GAME_PLAYER_ANSWER,
+    GAME_RESET,
+    GAME_START_COOLDOWN,
+    GAME_STATUS,
+    GAME_SUCCESS_JOIN,
+    GAME_TOTAL_PLAYERS,
+    GAME_UPDATE_QUESTION,
+} from "@rahoot/common/eventConstants"
 import { Answer, Player, Quizz } from "@rahoot/common/types/game"
 import { Server, Socket } from "@rahoot/common/types/game/socket"
 import { Status, STATUS, StatusDataMap } from "@rahoot/common/types/game/status"
@@ -102,7 +113,7 @@ class Game {
   broadcastStatus<T extends Status>(status: T, data: StatusDataMap[T]) {
     const statusData = { name: status, data }
     this.lastBroadcastStatus = statusData
-    this.io.to(this.gameId).emit("game:status", statusData)
+    this.io.to(this.gameId).emit(GAME_STATUS, statusData)
   }
 
   sendStatus<T extends Status>(
@@ -118,7 +129,7 @@ class Game {
       this.playerStatus.set(target, statusData)
     }
 
-    this.io.to(target).emit("game:status", statusData)
+    this.io.to(target).emit(GAME_STATUS, statusData)
   }
 
   join(socket: Socket, username: string) {
@@ -127,7 +138,7 @@ class Game {
     )
 
     if (isAlreadyConnected) {
-      socket.emit("game:errorMessage", "Player already connected")
+      socket.emit(GAME_ERROR_MESSAGE, "Player already connected")
 
       return
     }
@@ -135,7 +146,7 @@ class Game {
     const result = usernameValidator.safeParse(username)
 
     if (result.error) {
-      socket.emit("game:errorMessage", result.error.issues[0].message)
+      socket.emit(GAME_ERROR_MESSAGE, result.error.issues[0].message)
 
       return
     }
@@ -153,9 +164,9 @@ class Game {
     this.players.push(playerData)
 
     this.io.to(this.manager.id).emit("manager:newPlayer", playerData)
-    this.io.to(this.gameId).emit("game:totalPlayers", this.players.length)
+    this.io.to(this.gameId).emit(GAME_TOTAL_PLAYERS, this.players.length)
 
-    socket.emit("game:successJoin", this.gameId)
+    socket.emit(GAME_SUCCESS_JOIN, this.gameId)
   }
 
   kickPlayer(socket: Socket, playerId: string) {
@@ -175,10 +186,10 @@ class Game {
     this.io.in(playerId).socketsLeave(this.gameId)
     this.io
       .to(player.id)
-      .emit("game:reset", "You have been kicked by the manager")
+      .emit(GAME_RESET, "You have been kicked by the manager")
     this.io.to(this.manager.id).emit("manager:playerKicked", player.id)
 
-    this.io.to(this.gameId).emit("game:totalPlayers", this.players.length)
+    this.io.to(this.gameId).emit(GAME_TOTAL_PLAYERS, this.players.length)
   }
 
   reconnect(socket: Socket) {
@@ -194,7 +205,7 @@ class Game {
 
   private reconnectManager(socket: Socket) {
     if (this.manager.connected) {
-      socket.emit("game:reset", "Manager already connected")
+      socket.emit(GAME_RESET, "Manager already connected")
 
       return
     }
@@ -218,7 +229,7 @@ class Game {
       status,
       players: this.players,
     })
-    socket.emit("game:totalPlayers", this.players.length)
+    socket.emit(GAME_TOTAL_PLAYERS, this.players.length)
 
     registry.reactivateGame(this.gameId)
     console.log(`Manager reconnected to game ${this.inviteCode}`)
@@ -233,7 +244,7 @@ class Game {
     }
 
     if (player.connected) {
-      socket.emit("game:reset", "Player already connected")
+      socket.emit(GAME_RESET, "Player already connected")
 
       return
     }
@@ -268,7 +279,7 @@ class Game {
         points: player.points,
       },
     })
-    socket.emit("game:totalPlayers", this.players.length)
+    socket.emit(GAME_TOTAL_PLAYERS, this.players.length)
     console.log(
       `Player ${player.username} reconnected to game ${this.inviteCode}`,
     )
@@ -292,7 +303,7 @@ class Game {
           return
         }
 
-        this.io.to(this.gameId).emit("game:cooldown", count)
+        this.io.to(this.gameId).emit(GAME_COOLDOWN, count)
         count -= 1
       }, 1000)
     })
@@ -320,7 +331,7 @@ class Game {
 
     await sleep(3)
 
-    this.io.to(this.gameId).emit("game:startCooldown")
+    this.io.to(this.gameId).emit(GAME_START_COOLDOWN)
     await this.startCooldown(3)
 
     this.newRound()
@@ -335,7 +346,7 @@ class Game {
 
     this.playerStatus.clear()
 
-    this.io.to(this.gameId).emit("game:updateQuestion", {
+    this.io.to(this.gameId).emit(GAME_UPDATE_QUESTION, {
       current: this.round.currentQuestion + 1,
       total: this.quizz.questions.length,
     })
@@ -472,9 +483,9 @@ class Game {
 
     socket
       .to(this.gameId)
-      .emit("game:playerAnswer", this.round.playersAnswers.length)
+      .emit(GAME_PLAYER_ANSWER, this.round.playersAnswers.length)
 
-    this.io.to(this.gameId).emit("game:totalPlayers", this.players.length)
+    this.io.to(this.gameId).emit(GAME_TOTAL_PLAYERS, this.players.length)
 
     if (this.round.playersAnswers.length === this.players.length) {
       this.abortCooldown()

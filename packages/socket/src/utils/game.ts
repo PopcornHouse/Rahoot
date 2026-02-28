@@ -1,3 +1,4 @@
+import { GAME_ERROR_MESSAGE } from "@rahoot/common/eventConstants"
 import { Socket } from "@rahoot/common/types/game/socket"
 import Game from "@rahoot/socket/services/game"
 import Registry from "@rahoot/socket/services/registry"
@@ -8,7 +9,7 @@ export const withGame = (
   callback: (_game: Game) => void
 ): void => {
   if (!gameId) {
-    socket.emit("game:errorMessage", "Game not found")
+    socket.emit(GAME_ERROR_MESSAGE, "Game not found")
 
     return
   }
@@ -17,7 +18,7 @@ export const withGame = (
   const game = registry.getGameById(gameId)
 
   if (!game) {
-    socket.emit("game:errorMessage", "Game not found")
+    socket.emit(GAME_ERROR_MESSAGE, "Game not found")
 
     return
   }

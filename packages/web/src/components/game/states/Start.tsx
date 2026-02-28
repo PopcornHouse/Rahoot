@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_COOLDOWN, GAME_START_COOLDOWN } from "@rahoot/common/eventConstants"
 import { CommonStatusDataMap } from "@rahoot/common/types/game/status"
 import { useEvent } from "@rahoot/web/contexts/socketProvider"
 import { SFX_BOUMP_SOUND } from "@rahoot/web/utils/constants"
@@ -19,12 +20,12 @@ const Start = ({ data: { time, subject } }: Props) => {
     volume: 0.2,
   })
 
-  useEvent("game:startCooldown", () => {
+  useEvent(GAME_START_COOLDOWN, () => {
     sfxBoump()
     setShowTitle(false)
   })
 
-  useEvent("game:cooldown", (sec) => {
+  useEvent(GAME_COOLDOWN, (sec) => {
     sfxBoump()
     setCooldown(sec)
   })

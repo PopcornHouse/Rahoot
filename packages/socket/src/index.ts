@@ -1,3 +1,10 @@
+import {
+  GAME_CREATE,
+  GAME_ERROR_MESSAGE,
+  GAME_RESET,
+  GAME_SUCCESS_ROOM,
+  GAME_TOTAL_PLAYERS
+} from "@rahoot/common/eventConstants"
 import { Server } from "@rahoot/common/types/game/socket"
 import { inviteCodeValidator } from "@rahoot/common/validators/auth"
 import env from "@rahoot/socket/env"
@@ -34,7 +41,7 @@ io.on("connection", (socket) => {
       return
     }
 
-    socket.emit("game:reset", "Game not found")
+    socket.emit(GAME_RESET, "Game not found")
   })
 
   socket.on("manager:reconnect", ({ gameId }) => {
@@ -46,7 +53,7 @@ io.on("connection", (socket) => {
       return
     }
 
-    socket.emit("game:reset", "Game expired")
+    socket.emit(GAME_RESET, "Game expired")
   })
 
   socket.on("manager:auth", (password) => {
@@ -66,12 +73,12 @@ io.on("connection", (socket) => {
     }
   })
 
-  socket.on("game:create", (quizzId) => {
+  socket.on(GAME_CREATE, (quizzId) => {
     const quizzList = Config.quizz()
     const quizz = quizzList.find((q) => q.id === quizzId)
 
     if (!quizz) {
-      socket.emit("game:errorMessage", "Quizz not found")
+      socket.emit(GAME_ERROR_MESSAGE, "Quizz not found")
 
       return
     }
@@ -84,7 +91,7 @@ io.on("connection", (socket) => {
     const result = inviteCodeValidator.safeParse(inviteCode)
 
     if (result.error) {
-      socket.emit("game:errorMessage", result.error.issues[0].message)
+      socket.emit(GAME_ERROR_MESSAGE, result.error.issues[0].message)
 
       return
     }
@@ -92,12 +99,12 @@ io.on("connection", (socket) => {
     const game = registry.getGameByInviteCode(inviteCode)
 
     if (!game) {
-      socket.emit("game:errorMessage", "Game not found")
+      socket.emit(GAME_ERROR_MESSAGE, "Game not found")
 
       return
     }
 
-    socket.emit("game:successRoom", game.gameId)
+    socket.emit(GAME_SUCCESS_ROOM, game.gameId)
   })
 
   socket.on("player:login", ({ gameId, data }) =>
@@ -142,7 +149,7 @@ io.on("connection", (socket) => {
       if (!managerGame.started) {
         console.log("Reset game (manager disconnected)")
         managerGame.abortCooldown()
-        io.to(managerGame.gameId).emit("game:reset", "Manager disconnected")
+        io.to(managerGame.gameId).emit(GAME_RESET, "Manager disconnected")
         registry.removeGame(managerGame.gameId)
 
         return
@@ -165,7 +172,7 @@ io.on("connection", (socket) => {
       game.players = game.players.filter((p) => p.id !== socket.id)
 
       io.to(game.manager.id).emit("manager:removePlayer", player.id)
-      io.to(game.gameId).emit("game:totalPlayers", game.players.length)
+      io.to(game.gameId).emit(GAME_TOTAL_PLAYERS, game.players.length)
 
       console.log(`Removed player ${player.username} from game ${game.gameId}`)
 
@@ -173,7 +180,7 @@ io.on("connection", (socket) => {
     }
 
     player.connected = false
-    io.to(game.gameId).emit("game:totalPlayers", game.players.length)
+    io.to(game.gameId).emit(GAME_TOTAL_PLAYERS, game.players.length)
   })
 })
 

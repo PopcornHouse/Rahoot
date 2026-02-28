@@ -1,14 +1,15 @@
 "use client"
 
+import { GAME_COOLDOWN, GAME_PLAYER_ANSWER } from "@rahoot/common/eventConstants"
 import { CommonStatusDataMap } from "@rahoot/common/types/game/status"
 import AnswerButton from "@rahoot/web/components/AnswerButton"
 import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
 import { usePlayerStore } from "@rahoot/web/stores/player"
 import {
-  ANSWERS_COLORS,
-  ANSWERS_ICONS,
-  SFX_ANSWERS_MUSIC,
-  SFX_ANSWERS_SOUND,
+    ANSWERS_COLORS,
+    ANSWERS_ICONS,
+    SFX_ANSWERS_MUSIC,
+    SFX_ANSWERS_SOUND,
 } from "@rahoot/web/utils/constants"
 import clsx from "clsx"
 import { useParams } from "next/navigation"
@@ -66,11 +67,11 @@ const Answers = ({
     }
   }, [playMusic])
 
-  useEvent("game:cooldown", (sec) => {
+  useEvent(GAME_COOLDOWN, (sec) => {
     setCooldown(sec)
   })
 
-  useEvent("game:playerAnswer", (count) => {
+  useEvent(GAME_PLAYER_ANSWER, (count) => {
     setTotalAnswer(count)
     sfxPop()
   })

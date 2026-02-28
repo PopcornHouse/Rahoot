@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_UPDATE_QUESTION } from "@rahoot/common/eventConstants"
 import { Status } from "@rahoot/common/types/game/status"
 import background from "@rahoot/web/assets/background.webp"
 import Button from "@rahoot/web/components/Button"
@@ -25,7 +26,7 @@ const GameWrapper = ({ children, statusName, onNext, manager }: Props) => {
   const [isDisabled, setIsDisabled] = useState(false)
   const next = statusName ? MANAGER_SKIP_BTN[statusName] : null
 
-  useEvent("game:updateQuestion", ({ current, total }) => {
+  useEvent(GAME_UPDATE_QUESTION, ({ current, total }) => {
     setQuestionStates({
       current,
       total,

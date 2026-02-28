@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_TOTAL_PLAYERS } from "@rahoot/common/eventConstants"
 import { Player } from "@rahoot/common/types/game"
 import { ManagerStatusDataMap } from "@rahoot/common/types/game/status"
 import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
@@ -30,7 +31,7 @@ const Room = ({ data: { text, inviteCode } }: Props) => {
     setPlayerList(playerList.filter((p) => p.id !== playerId))
   })
 
-  useEvent("game:totalPlayers", (total) => {
+  useEvent(GAME_TOTAL_PLAYERS, (total) => {
     setTotalPlayers(total)
   })
 

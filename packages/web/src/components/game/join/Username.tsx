@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_SUCCESS_JOIN } from "@rahoot/common/eventConstants"
 import { STATUS } from "@rahoot/common/types/game/status"
 import Button from "@rahoot/web/components/Button"
 import Form from "@rahoot/web/components/Form"
@@ -30,7 +31,7 @@ const Username = () => {
     }
   }
 
-  useEvent("game:successJoin", (gameId) => {
+  useEvent(GAME_SUCCESS_JOIN, (gameId) => {
     setStatus(STATUS.WAIT, { text: "Waiting for the players" })
     login(username)
 

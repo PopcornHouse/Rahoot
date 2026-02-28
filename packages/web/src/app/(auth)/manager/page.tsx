@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_CREATE } from "@rahoot/common/eventConstants"
 import { QuizzWithId } from "@rahoot/common/types/game"
 import { STATUS } from "@rahoot/common/types/game/status"
 import ManagerPassword from "@rahoot/web/components/game/create/ManagerPassword"
@@ -32,7 +33,7 @@ const Manager = () => {
     socket?.emit("manager:auth", password)
   }
   const handleCreate = (quizzId: string) => {
-    socket?.emit("game:create", quizzId)
+    socket?.emit(GAME_CREATE, quizzId)
   }
 
   if (!isAuth) {

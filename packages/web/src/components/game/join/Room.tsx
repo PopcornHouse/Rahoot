@@ -1,3 +1,4 @@
+import { GAME_SUCCESS_ROOM } from "@rahoot/common/eventConstants"
 import Button from "@rahoot/web/components/Button"
 import Form from "@rahoot/web/components/Form"
 import Input from "@rahoot/web/components/Input"
@@ -23,7 +24,7 @@ const Room = () => {
     }
   }
 
-  useEvent("game:successRoom", (gameId) => {
+  useEvent(GAME_SUCCESS_ROOM, (gameId) => {
     join(gameId)
   })
 

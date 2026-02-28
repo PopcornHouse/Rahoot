@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_ERROR_MESSAGE } from "@rahoot/common/eventConstants"
 import Room from "@rahoot/web/components/game/join/Room"
 import Username from "@rahoot/web/components/game/join/Username"
 import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
@@ -17,7 +18,7 @@ const Home = () => {
     }
   }, [connect, isConnected])
 
-  useEvent("game:errorMessage", (message) => {
+  useEvent(GAME_ERROR_MESSAGE, (message) => {
     toast.error(message)
   })
 

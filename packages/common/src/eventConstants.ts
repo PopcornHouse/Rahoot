@@ -1,0 +1,12 @@
+// Game Events
+export const GAME_STATUS = "game:status"
+export const GAME_SUCCESS_ROOM = "game:successRoom"
+export const GAME_SUCCESS_JOIN = "game:successJoin"
+export const GAME_TOTAL_PLAYERS = "game:totalPlayers"
+export const GAME_ERROR_MESSAGE = "game:errorMessage"
+export const GAME_START_COOLDOWN = "game:startCooldown"
+export const GAME_COOLDOWN = "game:cooldown"
+export const GAME_RESET = "game:reset"
+export const GAME_UPDATE_QUESTION = "game:updateQuestion"
+export const GAME_PLAYER_ANSWER = "game:playerAnswer"
+export const GAME_CREATE = "game:create"

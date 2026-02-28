@@ -1,5 +1,6 @@
 "use client"
 
+import { GAME_RESET, GAME_STATUS } from "@rahoot/common/eventConstants"
 import { STATUS } from "@rahoot/common/types/game/status"
 import GameWrapper from "@rahoot/web/components/game/GameWrapper"
 import Answers from "@rahoot/web/components/game/states/Answers"
@@ -25,7 +26,7 @@ const ManagerGame = () => {
     useManagerStore()
   const { setQuestionStates } = useQuestionStore()
 
-  useEvent("game:status", ({ name, data }) => {
+  useEvent(GAME_STATUS, ({ name, data }) => {
     if (name in GAME_STATE_COMPONENTS_MANAGER) {
       setStatus(name, data)
     }
@@ -47,7 +48,7 @@ const ManagerGame = () => {
     },
   )
 
-  useEvent("game:reset", (message) => {
+  useEvent(GAME_RESET, (message) => {
     router.replace("/manager")
     reset()
     setQuestionStates(null)
