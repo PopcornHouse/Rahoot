@@ -3,7 +3,7 @@ import {
   GAME_ERROR_MESSAGE,
   GAME_RESET,
   GAME_SUCCESS_ROOM,
-  GAME_TOTAL_PLAYERS
+  GAME_TOTAL_PLAYERS,
 } from "@rahoot/common/eventConstants"
 import {
   MANAGER_ABORT_QUIZ,
@@ -33,7 +33,7 @@ import { Server as ServerIO } from "socket.io"
 
 const io: ServerIO = new ServerIO({
   cors: {
-    origin: [env.WEB_ORIGIN],
+    origin: env.SOCKET_CORS_ORIGIN,
   },
 })
 Config.init()
@@ -62,7 +62,10 @@ io.on("connection", (socket) => {
   })
 
   socket.on(MANAGER_RECONNECT, ({ gameId }) => {
-    const game = registry.getManagerGame(gameId, socket.handshake.auth.clientId)
+    const game = registry.getManagerGame(
+      gameId,
+      socket.handshake.auth.clientId,
+    )
 
     if (game) {
       game.reconnect(socket)
