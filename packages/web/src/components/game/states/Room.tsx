@@ -1,6 +1,12 @@
 "use client"
 
 import { GAME_TOTAL_PLAYERS } from "@rahoot/common/eventConstants"
+import {
+    MANAGER_KICK_PLAYER,
+    MANAGER_NEW_PLAYER,
+    MANAGER_PLAYER_KICKED,
+    MANAGER_REMOVE_PLAYER,
+} from "@rahoot/common/managerConstants"
 import { Player } from "@rahoot/common/types/game"
 import { ManagerStatusDataMap } from "@rahoot/common/types/game/status"
 import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
@@ -19,15 +25,15 @@ const Room = ({ data: { text, inviteCode } }: Props) => {
   const [playerList, setPlayerList] = useState<Player[]>(players)
   const [totalPlayers, setTotalPlayers] = useState(0)
 
-  useEvent("manager:newPlayer", (player) => {
+  useEvent(MANAGER_NEW_PLAYER, (player) => {
     setPlayerList([...playerList, player])
   })
 
-  useEvent("manager:removePlayer", (playerId) => {
+  useEvent(MANAGER_REMOVE_PLAYER, (playerId) => {
     setPlayerList(playerList.filter((p) => p.id !== playerId))
   })
 
-  useEvent("manager:playerKicked", (playerId) => {
+  useEvent(MANAGER_PLAYER_KICKED, (playerId) => {
     setPlayerList(playerList.filter((p) => p.id !== playerId))
   })
 
@@ -40,7 +46,7 @@ const Room = ({ data: { text, inviteCode } }: Props) => {
       return
     }
 
-    socket?.emit("manager:kickPlayer", {
+    socket?.emit(MANAGER_KICK_PLAYER, {
       gameId,
       playerId,
     })

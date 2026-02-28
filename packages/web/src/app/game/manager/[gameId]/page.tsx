@@ -1,6 +1,14 @@
 "use client"
 
 import { GAME_RESET, GAME_STATUS } from "@rahoot/common/eventConstants"
+import {
+  MANAGER_ABORT_QUIZ,
+  MANAGER_NEXT_QUESTION,
+  MANAGER_RECONNECT,
+  MANAGER_SHOW_LEADERBOARD,
+  MANAGER_START_GAME,
+  MANAGER_SUCCESS_RECONNECT,
+} from "@rahoot/common/managerConstants"
 import { STATUS } from "@rahoot/common/types/game/status"
 import GameWrapper from "@rahoot/web/components/game/GameWrapper"
 import Answers from "@rahoot/web/components/game/states/Answers"
@@ -34,12 +42,12 @@ const ManagerGame = () => {
 
   useEvent("connect", () => {
     if (gameIdParam) {
-      socket?.emit("manager:reconnect", { gameId: gameIdParam })
+      socket?.emit(MANAGER_RECONNECT, { gameId: gameIdParam })
     }
   })
 
   useEvent(
-    "manager:successReconnect",
+    MANAGER_SUCCESS_RECONNECT,
     ({ gameId, status, players, currentQuestion }) => {
       setGameId(gameId)
       setStatus(status.name, status.data)
@@ -62,22 +70,22 @@ const ManagerGame = () => {
 
     switch (status?.name) {
       case STATUS.SHOW_ROOM:
-        socket?.emit("manager:startGame", { gameId })
+        socket?.emit(MANAGER_START_GAME, { gameId })
 
         break
 
       case STATUS.SELECT_ANSWER:
-        socket?.emit("manager:abortQuiz", { gameId })
+        socket?.emit(MANAGER_ABORT_QUIZ, { gameId })
 
         break
 
       case STATUS.SHOW_RESPONSES:
-        socket?.emit("manager:showLeaderboard", { gameId })
+        socket?.emit(MANAGER_SHOW_LEADERBOARD, { gameId })
 
         break
 
       case STATUS.SHOW_LEADERBOARD:
-        socket?.emit("manager:nextQuestion", { gameId })
+        socket?.emit(MANAGER_NEXT_QUESTION, { gameId })
 
         break
     }

@@ -1,3 +1,4 @@
+import { MANAGER_ERROR_MESSAGE } from "@rahoot/common/managerConstants"
 import Button from "@rahoot/web/components/Button"
 import Form from "@rahoot/web/components/Form"
 import Input from "@rahoot/web/components/Input"
@@ -22,7 +23,7 @@ const ManagerPassword = ({ onSubmit }: Props) => {
     }
   }
 
-  useEvent("manager:errorMessage", (message) => {
+  useEvent(MANAGER_ERROR_MESSAGE, (message) => {
     toast.error(message)
   })
 

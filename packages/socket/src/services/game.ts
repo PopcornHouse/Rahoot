@@ -9,6 +9,12 @@ import {
   GAME_TOTAL_PLAYERS,
   GAME_UPDATE_QUESTION,
 } from "@rahoot/common/eventConstants"
+import {
+  MANAGER_GAME_CREATED,
+  MANAGER_NEW_PLAYER,
+  MANAGER_PLAYER_KICKED,
+  MANAGER_SUCCESS_RECONNECT,
+} from "@rahoot/common/managerConstants"
 import { PLAYER_SUCCESS_RECONNECT } from "@rahoot/common/playerConstants"
 import { Answer, Player, Quizz } from "@rahoot/common/types/game"
 import { Server, Socket } from "@rahoot/common/types/game/socket"
@@ -101,7 +107,7 @@ class Game {
     this.quizz = quizz
 
     socket.join(this.gameId)
-    socket.emit("manager:gameCreated", {
+    socket.emit(MANAGER_GAME_CREATED, {
       gameId: this.gameId,
       inviteCode: roomInvite,
     })
@@ -164,7 +170,7 @@ class Game {
 
     this.players.push(playerData)
 
-    this.io.to(this.manager.id).emit("manager:newPlayer", playerData)
+    this.io.to(this.manager.id).emit(MANAGER_NEW_PLAYER, playerData)
     this.io.to(this.gameId).emit(GAME_TOTAL_PLAYERS, this.players.length)
 
     socket.emit(GAME_SUCCESS_JOIN, this.gameId)
@@ -188,7 +194,7 @@ class Game {
     this.io
       .to(player.id)
       .emit(GAME_RESET, "You have been kicked by the manager")
-    this.io.to(this.manager.id).emit("manager:playerKicked", player.id)
+    this.io.to(this.manager.id).emit(MANAGER_PLAYER_KICKED, player.id)
 
     this.io.to(this.gameId).emit(GAME_TOTAL_PLAYERS, this.players.length)
   }
@@ -221,7 +227,7 @@ class Game {
         data: { text: "Waiting for players" },
       }
 
-    socket.emit("manager:successReconnect", {
+    socket.emit(MANAGER_SUCCESS_RECONNECT, {
       gameId: this.gameId,
       currentQuestion: {
         current: this.round.currentQuestion + 1,

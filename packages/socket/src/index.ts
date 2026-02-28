@@ -6,12 +6,23 @@ import {
   GAME_TOTAL_PLAYERS
 } from "@rahoot/common/eventConstants"
 import {
+  MANAGER_ABORT_QUIZ,
+  MANAGER_AUTH,
+  MANAGER_ERROR_MESSAGE,
+  MANAGER_KICK_PLAYER,
+  MANAGER_NEXT_QUESTION,
+  MANAGER_QUIZZ_LIST,
+  MANAGER_RECONNECT,
+  MANAGER_REMOVE_PLAYER,
+  MANAGER_SHOW_LEADERBOARD,
+  MANAGER_START_GAME,
+} from "@rahoot/common/managerConstants"
+import {
   PLAYER_JOIN,
   PLAYER_LOGIN,
   PLAYER_RECONNECT,
   PLAYER_SELECTED_ANSWER,
 } from "@rahoot/common/playerConstants"
-import { Server } from "@rahoot/common/types/game/socket"
 import { inviteCodeValidator } from "@rahoot/common/validators/auth"
 import env from "@rahoot/socket/env"
 import Config from "@rahoot/socket/services/config"
@@ -50,7 +61,7 @@ io.on("connection", (socket) => {
     socket.emit(GAME_RESET, "Game not found")
   })
 
-  socket.on("manager:reconnect", ({ gameId }) => {
+  socket.on(MANAGER_RECONNECT, ({ gameId }) => {
     const game = registry.getManagerGame(gameId, socket.handshake.auth.clientId)
 
     if (game) {
@@ -62,20 +73,20 @@ io.on("connection", (socket) => {
     socket.emit(GAME_RESET, "Game expired")
   })
 
-  socket.on("manager:auth", (password) => {
+  socket.on(MANAGER_AUTH, (password) => {
     try {
       const config = Config.game()
 
       if (password !== config.managerPassword) {
-        socket.emit("manager:errorMessage", "Invalid password")
+        socket.emit(MANAGER_ERROR_MESSAGE, "Invalid password")
 
         return
       }
 
-      socket.emit("manager:quizzList", Config.quizz())
+      socket.emit(MANAGER_QUIZZ_LIST, Config.quizz())
     } catch (error) {
       console.error("Failed to read game config:", error)
-      socket.emit("manager:errorMessage", "Failed to read game config")
+      socket.emit(MANAGER_ERROR_MESSAGE, "Failed to read game config")
     }
   })
 
@@ -117,11 +128,11 @@ io.on("connection", (socket) => {
     withGame(gameId, socket, (game) => game.join(socket, data.username)),
   )
 
-  socket.on("manager:kickPlayer", ({ gameId, playerId }) =>
+  socket.on(MANAGER_KICK_PLAYER, ({ gameId, playerId }) =>
     withGame(gameId, socket, (game) => game.kickPlayer(socket, playerId)),
   )
 
-  socket.on("manager:startGame", ({ gameId }) =>
+  socket.on(MANAGER_START_GAME, ({ gameId }) =>
     withGame(gameId, socket, (game) => game.start(socket)),
   )
 
@@ -131,15 +142,15 @@ io.on("connection", (socket) => {
     ),
   )
 
-  socket.on("manager:abortQuiz", ({ gameId }) =>
+  socket.on(MANAGER_ABORT_QUIZ, ({ gameId }) =>
     withGame(gameId, socket, (game) => game.abortRound(socket)),
   )
 
-  socket.on("manager:nextQuestion", ({ gameId }) =>
+  socket.on(MANAGER_NEXT_QUESTION, ({ gameId }) =>
     withGame(gameId, socket, (game) => game.nextRound(socket)),
   )
 
-  socket.on("manager:showLeaderboard", ({ gameId }) =>
+  socket.on(MANAGER_SHOW_LEADERBOARD, ({ gameId }) =>
     withGame(gameId, socket, (game) => game.showLeaderboard()),
   )
 
@@ -177,7 +188,7 @@ io.on("connection", (socket) => {
     if (!game.started) {
       game.players = game.players.filter((p) => p.id !== socket.id)
 
-      io.to(game.manager.id).emit("manager:removePlayer", player.id)
+      io.to(game.manager.id).emit(MANAGER_REMOVE_PLAYER, player.id)
       io.to(game.gameId).emit(GAME_TOTAL_PLAYERS, game.players.length)
 
       console.log(`Removed player ${player.username} from game ${game.gameId}`)

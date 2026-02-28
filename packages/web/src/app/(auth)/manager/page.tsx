@@ -1,6 +1,11 @@
 "use client"
 
 import { GAME_CREATE } from "@rahoot/common/eventConstants"
+import {
+    MANAGER_AUTH,
+    MANAGER_GAME_CREATED,
+    MANAGER_QUIZZ_LIST,
+} from "@rahoot/common/managerConstants"
 import { QuizzWithId } from "@rahoot/common/types/game"
 import { STATUS } from "@rahoot/common/types/game/status"
 import ManagerPassword from "@rahoot/web/components/game/create/ManagerPassword"
@@ -18,19 +23,19 @@ const Manager = () => {
   const [isAuth, setIsAuth] = useState(false)
   const [quizzList, setQuizzList] = useState<QuizzWithId[]>([])
 
-  useEvent("manager:quizzList", (quizzList) => {
+  useEvent(MANAGER_QUIZZ_LIST, (quizzList) => {
     setIsAuth(true)
     setQuizzList(quizzList)
   })
 
-  useEvent("manager:gameCreated", ({ gameId, inviteCode }) => {
+  useEvent(MANAGER_GAME_CREATED, ({ gameId, inviteCode }) => {
     setGameId(gameId)
     setStatus(STATUS.SHOW_ROOM, { text: "Waiting for the players", inviteCode })
     router.push(`/game/manager/${gameId}`)
   })
 
   const handleAuth = (password: string) => {
-    socket?.emit("manager:auth", password)
+    socket?.emit(MANAGER_AUTH, password)
   }
   const handleCreate = (quizzId: string) => {
     socket?.emit(GAME_CREATE, quizzId)
