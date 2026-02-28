@@ -1,6 +1,7 @@
 "use client"
 
 import { GAME_RESET, GAME_STATUS } from "@rahoot/common/eventConstants"
+import { PLAYER_RECONNECT, PLAYER_SUCCESS_RECONNECT } from "@rahoot/common/playerConstants"
 import { STATUS } from "@rahoot/common/types/game/status"
 import GameWrapper from "@rahoot/web/components/game/GameWrapper"
 import Answers from "@rahoot/web/components/game/states/Answers"
@@ -25,12 +26,12 @@ const Game = () => {
 
   useEvent("connect", () => {
     if (gameIdParam) {
-      socket?.emit("player:reconnect", { gameId: gameIdParam })
+      socket?.emit(PLAYER_RECONNECT, { gameId: gameIdParam })
     }
   })
 
   useEvent(
-    "player:successReconnect",
+    PLAYER_SUCCESS_RECONNECT,
     ({ gameId, status, player, currentQuestion }) => {
       setGameId(gameId)
       setStatus(status.name, status.data)

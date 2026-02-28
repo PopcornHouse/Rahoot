@@ -267,7 +267,7 @@ class Game {
       this.playerStatus.set(socket.id, oldStatus)
     }
 
-    socket.emit("player:successReconnect", {
+    socket.emit(PLAYER_SUCCESS_RECONNECT, {
       gameId: this.gameId,
       currentQuestion: {
         current: this.round.currentQuestion + 1,

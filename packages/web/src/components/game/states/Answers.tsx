@@ -1,15 +1,16 @@
 "use client"
 
 import { GAME_COOLDOWN, GAME_PLAYER_ANSWER } from "@rahoot/common/eventConstants"
+import { PLAYER_SELECTED_ANSWER } from "@rahoot/common/playerConstants"
 import { CommonStatusDataMap } from "@rahoot/common/types/game/status"
 import AnswerButton from "@rahoot/web/components/AnswerButton"
 import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
 import { usePlayerStore } from "@rahoot/web/stores/player"
 import {
-    ANSWERS_COLORS,
-    ANSWERS_ICONS,
-    SFX_ANSWERS_MUSIC,
-    SFX_ANSWERS_SOUND,
+  ANSWERS_COLORS,
+  ANSWERS_ICONS,
+  SFX_ANSWERS_MUSIC,
+  SFX_ANSWERS_SOUND,
 } from "@rahoot/web/utils/constants"
 import clsx from "clsx"
 import { useParams } from "next/navigation"
@@ -45,7 +46,7 @@ const Answers = ({
       return
     }
 
-    socket?.emit("player:selectedAnswer", {
+    socket?.emit(PLAYER_SELECTED_ANSWER, {
       gameId,
       data: {
         answerKey,

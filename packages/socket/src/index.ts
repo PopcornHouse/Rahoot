@@ -5,6 +5,12 @@ import {
   GAME_SUCCESS_ROOM,
   GAME_TOTAL_PLAYERS
 } from "@rahoot/common/eventConstants"
+import {
+  PLAYER_JOIN,
+  PLAYER_LOGIN,
+  PLAYER_RECONNECT,
+  PLAYER_SELECTED_ANSWER,
+} from "@rahoot/common/playerConstants"
 import { Server } from "@rahoot/common/types/game/socket"
 import { inviteCodeValidator } from "@rahoot/common/validators/auth"
 import env from "@rahoot/socket/env"
@@ -32,7 +38,7 @@ io.on("connection", (socket) => {
     `A user connected: socketId: ${socket.id}, clientId: ${socket.handshake.auth.clientId}`,
   )
 
-  socket.on("player:reconnect", ({ gameId }) => {
+  socket.on(PLAYER_RECONNECT, ({ gameId }) => {
     const game = registry.getPlayerGame(gameId, socket.handshake.auth.clientId)
 
     if (game) {
@@ -87,7 +93,7 @@ io.on("connection", (socket) => {
     registry.addGame(game)
   })
 
-  socket.on("player:join", (inviteCode) => {
+  socket.on(PLAYER_JOIN, (inviteCode) => {
     const result = inviteCodeValidator.safeParse(inviteCode)
 
     if (result.error) {
@@ -107,7 +113,7 @@ io.on("connection", (socket) => {
     socket.emit(GAME_SUCCESS_ROOM, game.gameId)
   })
 
-  socket.on("player:login", ({ gameId, data }) =>
+  socket.on(PLAYER_LOGIN, ({ gameId, data }) =>
     withGame(gameId, socket, (game) => game.join(socket, data.username)),
   )
 
@@ -119,7 +125,7 @@ io.on("connection", (socket) => {
     withGame(gameId, socket, (game) => game.start(socket)),
   )
 
-  socket.on("player:selectedAnswer", ({ gameId, data }) =>
+  socket.on(PLAYER_SELECTED_ANSWER, ({ gameId, data }) =>
     withGame(gameId, socket, (game) =>
       game.selectAnswer(socket, data.answerKey),
     ),

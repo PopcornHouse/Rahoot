@@ -1,6 +1,7 @@
 "use client"
 
 import { GAME_SUCCESS_JOIN } from "@rahoot/common/eventConstants"
+import { PLAYER_LOGIN } from "@rahoot/common/playerConstants"
 import { STATUS } from "@rahoot/common/types/game/status"
 import Button from "@rahoot/web/components/Button"
 import Form from "@rahoot/web/components/Form"
@@ -22,7 +23,7 @@ const Username = () => {
       return
     }
 
-    socket?.emit("player:login", { gameId, data: { username } })
+    socket?.emit(PLAYER_LOGIN, { gameId, data: { username } })
   }
 
   const handleKeyDown = (event: KeyboardEvent) => {

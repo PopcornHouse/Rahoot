@@ -1,4 +1,5 @@
 import { GAME_SUCCESS_ROOM } from "@rahoot/common/eventConstants"
+import { PLAYER_JOIN } from "@rahoot/common/playerConstants"
 import Button from "@rahoot/web/components/Button"
 import Form from "@rahoot/web/components/Form"
 import Input from "@rahoot/web/components/Input"
@@ -15,7 +16,7 @@ const Room = () => {
   const hasJoinedRef = useRef(false)
 
   const handleJoin = () => {
-    socket?.emit("player:join", invitation)
+    socket?.emit(PLAYER_JOIN, invitation)
   }
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -35,7 +36,7 @@ const Room = () => {
       return
     }
 
-    socket?.emit("player:join", pinCode)
+    socket?.emit(PLAYER_JOIN, pinCode)
     hasJoinedRef.current = true
   }, [searchParams, isConnected, socket])
 
