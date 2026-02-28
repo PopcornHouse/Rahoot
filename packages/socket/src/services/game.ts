@@ -1,14 +1,15 @@
 import {
-    GAME_COOLDOWN,
-    GAME_ERROR_MESSAGE,
-    GAME_PLAYER_ANSWER,
-    GAME_RESET,
-    GAME_START_COOLDOWN,
-    GAME_STATUS,
-    GAME_SUCCESS_JOIN,
-    GAME_TOTAL_PLAYERS,
-    GAME_UPDATE_QUESTION,
+  GAME_COOLDOWN,
+  GAME_ERROR_MESSAGE,
+  GAME_PLAYER_ANSWER,
+  GAME_RESET,
+  GAME_START_COOLDOWN,
+  GAME_STATUS,
+  GAME_SUCCESS_JOIN,
+  GAME_TOTAL_PLAYERS,
+  GAME_UPDATE_QUESTION,
 } from "@rahoot/common/eventConstants"
+import { PLAYER_SUCCESS_RECONNECT } from "@rahoot/common/playerConstants"
 import { Answer, Player, Quizz } from "@rahoot/common/types/game"
 import { Server, Socket } from "@rahoot/common/types/game/socket"
 import { Status, STATUS, StatusDataMap } from "@rahoot/common/types/game/status"
