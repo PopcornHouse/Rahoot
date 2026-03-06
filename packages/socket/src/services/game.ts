@@ -20,10 +20,12 @@ import { Answer, Player, Quizz } from "@rahoot/common/types/game"
 import { Server, Socket } from "@rahoot/common/types/game/socket"
 import { Status, STATUS, StatusDataMap } from "@rahoot/common/types/game/status"
 import { usernameValidator } from "@rahoot/common/validators/auth"
+import Config from "@rahoot/socket/services/config"
 import Registry from "@rahoot/socket/services/registry"
 import { createInviteCode, timeToPoint } from "@rahoot/socket/utils/game"
 import sleep from "@rahoot/socket/utils/sleep"
 import { v4 as uuid } from "uuid"
+
 
 const registry = Registry.getInstance()
 
@@ -374,6 +376,7 @@ class Game {
       question: question.question,
       image: question.image,
       cooldown: question.cooldown,
+      hideClientQuestion: Config.game().hideClientQuestion as boolean
     })
 
     await sleep(question.cooldown)
@@ -392,6 +395,7 @@ class Game {
       audio: question.audio,
       time: question.time,
       totalPlayer: this.players.length,
+      hideClientQuestion: Config.game().hideClientQuestion as boolean
     })
 
     await this.startCooldown(question.time)

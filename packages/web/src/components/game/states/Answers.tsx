@@ -1,6 +1,9 @@
 "use client"
 
-import { GAME_COOLDOWN, GAME_PLAYER_ANSWER } from "@rahoot/common/eventConstants"
+import {
+  GAME_COOLDOWN,
+  GAME_PLAYER_ANSWER,
+} from "@rahoot/common/eventConstants"
 import { PLAYER_SELECTED_ANSWER } from "@rahoot/common/playerConstants"
 import { CommonStatusDataMap } from "@rahoot/common/types/game/status"
 import AnswerButton from "@rahoot/web/components/AnswerButton"
@@ -22,7 +25,16 @@ type Props = {
 }
 
 const Answers = ({
-  data: { question, answers, image, audio, video, time, totalPlayer },
+  data: {
+    question,
+    answers,
+    image,
+    audio,
+    video,
+    time,
+    totalPlayer,
+    hideClientQuestion,
+  },
 }: Props) => {
   const { gameId }: { gameId?: string } = useParams()
   const { socket } = useSocket()
@@ -80,9 +92,13 @@ const Answers = ({
   return (
     <div className="flex h-full flex-1 flex-col justify-between">
       <div className="mx-auto inline-flex h-full w-full max-w-7xl flex-1 flex-col items-center justify-center gap-5">
-        <h2 className="text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl lg:text-5xl">
-          {question}
-        </h2>
+        {!hideClientQuestion ? (
+          <h2 className="text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl lg:text-5xl">
+            {question}
+          </h2>
+        ) : (
+          ""
+        )}
 
         {Boolean(audio) && !player && (
           <audio
@@ -93,22 +109,27 @@ const Answers = ({
           />
         )}
 
-        {Boolean(video) && !player && (
-          <video
-            className="m-4 mb-2 aspect-video max-h-60 w-auto rounded-md px-4 sm:max-h-100"
-            src={video}
-            autoPlay
-            controls
-          />
-        )}
+        {!hideClientQuestion
+          ? Boolean(video) &&
+            !player && (
+              <video
+                className="m-4 mb-2 aspect-video max-h-60 w-auto rounded-md px-4 sm:max-h-100"
+                src={video}
+                autoPlay
+                controls
+              />
+            )
+          : ""}
 
-        {Boolean(image) && (
-          <img
-            alt={question}
-            src={image}
-            className="mb-2 max-h-60 w-auto rounded-md px-4 sm:max-h-100"
-          />
-        )}
+        {!hideClientQuestion
+          ? Boolean(image) && (
+              <img
+                alt={question}
+                src={image}
+                className="mb-2 max-h-60 w-auto rounded-md px-4 sm:max-h-100"
+              />
+            )
+          : ""}
       </div>
 
       <div>

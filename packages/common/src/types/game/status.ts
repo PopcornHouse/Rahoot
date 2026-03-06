@@ -18,7 +18,7 @@ export type Status = (typeof STATUS)[keyof typeof STATUS]
 export type CommonStatusDataMap = {
   SHOW_START: { time: number; subject: string }
   SHOW_PREPARED: { totalAnswers: number; questionNumber: number }
-  SHOW_QUESTION: { question: string; image?: string; cooldown: number }
+  SHOW_QUESTION: { question: string; image?: string; cooldown: number; hideClientQuestion?: boolean }
   SELECT_ANSWER: {
     question: string
     answers: string[]
@@ -27,6 +27,7 @@ export type CommonStatusDataMap = {
     audio?: string
     time: number
     totalPlayer: number
+    hideClientQuestion?: boolean
   }
   SHOW_RESULT: {
     correct: boolean

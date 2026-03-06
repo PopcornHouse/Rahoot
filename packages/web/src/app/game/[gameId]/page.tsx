@@ -1,7 +1,10 @@
 "use client"
 
 import { GAME_RESET, GAME_STATUS } from "@rahoot/common/eventConstants"
-import { PLAYER_RECONNECT, PLAYER_SUCCESS_RECONNECT } from "@rahoot/common/playerConstants"
+import {
+  PLAYER_RECONNECT,
+  PLAYER_SUCCESS_RECONNECT,
+} from "@rahoot/common/playerConstants"
 import { STATUS } from "@rahoot/common/types/game/status"
 import GameWrapper from "@rahoot/web/components/game/GameWrapper"
 import Answers from "@rahoot/web/components/game/states/Answers"

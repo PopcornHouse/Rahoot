@@ -1,3 +1,5 @@
 {
-  "managerPassword": "PASSWORD"
+  "managerPassword": "PASSWORD",
+  "music": true,
+  "hideClientQuestion": true
 }

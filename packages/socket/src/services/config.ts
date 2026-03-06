@@ -26,6 +26,7 @@ class Config {
           {
             managerPassword: "PASSWORD",
             music: true,
+            hideQuestion: true
           },
           null,
           2
